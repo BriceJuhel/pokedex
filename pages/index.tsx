@@ -1,9 +1,8 @@
+// pages/index.tsx
 import React, { useEffect, useState } from 'react';
 import Layout from "../components/Layout";
 import Link from 'next/link';
 import TypeFilterCheckbox from '../components/TypeFilterCheckbox';
-
-// ... import statements ...
 
 interface Pokemon {
   name: string;
@@ -36,7 +35,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
         // Extract the necessary information (name, image) for each type
         const types: PokemonType[] = data.map((type: any) => ({
-          name: type.name.toLowerCase(),
+          name: type.name,
           image: type.image,
         }));
         setPokemonTypes(types);
@@ -150,7 +149,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
                 />
               </svg>
             </div>
-            <div className="pl-16">
+            <div className="pl-16 grid grid-cols-4 gap-4">
               {/* Affichage des checkboxes de type */}
               {pokemonTypes.map((type) => (
                 <TypeFilterCheckbox
@@ -162,7 +161,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
               ))}
               <button
                 onClick={resetFilters}
-                className="text-sm text-indigo-600 hover:underline focus:outline-none"
+                className="text-sm text-indigo-600 hover:underline focus:outline-none col-span-4"
               >
                 Réinitialiser
               </button>
@@ -208,7 +207,8 @@ export async function getStaticProps() {
       name: pokemon.name,
       image: pokemon.image,
       pokedexId: pokemon.pokedexId,
-      types: pokemon.apiTypes.map((type: any) => type.name.toLowerCase()),
+      types: pokemon.apiTypes.map((type: any) => type.name),
+
     }));
 
     return {
