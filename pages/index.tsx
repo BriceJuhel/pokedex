@@ -183,7 +183,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
                         <img
                           src={pokemon.image}
                           alt={pokemon.name}
-                          className="h-full w-full object-cover object-center group-hover:opacity-80 hover:-translate-y-1 transition-transform"
+                          className="h-full w-full object-fill object-center group-hover:opacity-80 hover:-translate-y-1 transition-transform"
                         />
                       </div>
                       <h3 className="mt-4 text-xl text-gray-700 font-bold">
