@@ -12,7 +12,7 @@ export default function Layout({title, children}) {
           <link rel="icon" href="/images/pokeball.png" />
         </Head>
 
-        <div className="bg-zinc-100 px-4 py-2">
+        <div className="bg-zinc-100 px-4 py-2 fixed top-0 left-0 w-full z-50">
         <div className="container mx-auto max-w-6xl flex items-center">
           <Link legacyBehavior href="/">
             <a className="flex items-center">
@@ -23,7 +23,7 @@ export default function Layout({title, children}) {
         </div>
       </div>
 
-        <main className='container mx-auto max-w-6xl pt-8 min-h-screen '>
+        <main className='container mx-auto max-w-6xl pt-24 min-h-screen '>
             {children}
         </main>
 
