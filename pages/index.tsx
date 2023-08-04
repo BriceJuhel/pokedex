@@ -8,6 +8,7 @@ interface Pokemon {
   image: string;
   pokedexId: number;
   types: string[];
+  apiTypes: { name: string }[];
 }
 
 interface HomeProps {
