@@ -1,8 +1,9 @@
-// pages/index.tsx
 import React, { useEffect, useState } from 'react';
 import Layout from "../components/Layout";
 import Link from 'next/link';
 import TypeFilterCheckbox from '../components/TypeFilterCheckbox';
+
+// ... import statements ...
 
 interface Pokemon {
   name: string;
@@ -27,28 +28,6 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
   const [pokemonTypes, setPokemonTypes] = useState<PokemonType[]>([]);
 
   useEffect(() => {
-    if (pokemonList) {
-      let filteredList = pokemonList;
-
-      // Filter by selected types
-      if (selectedTypes.length > 0) {
-        filteredList = filteredList.filter((pokemon) =>
-          pokemon.types.some((type) => selectedTypes.includes(type))
-        );
-      }
-
-      // Filter by search term
-      if (searchTerm.trim() !== '') {
-        filteredList = filteredList.filter((pokemon) =>
-          pokemon.name.toLowerCase().startsWith(searchTerm.toLowerCase())
-        );
-      }
-
-      setFilteredPokemonList(filteredList);
-    }
-  }, [searchTerm, selectedTypes, pokemonList]);
-
-  useEffect(() => {
     // Fetch the types from the API
     const fetchTypes = async () => {
       try {
@@ -57,7 +36,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
         // Extract the necessary information (name, image) for each type
         const types: PokemonType[] = data.map((type: any) => ({
-          name: type.name,
+          name: type.name.toLowerCase(),
           image: type.image,
         }));
         setPokemonTypes(types);
@@ -68,6 +47,31 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
     fetchTypes();
   }, []);
+
+  useEffect(() => {
+    // Apply filters whenever the selected types or search term change
+    applyFilters();
+  }, [selectedTypes, searchTerm]);
+
+  const applyFilters = () => {
+    let filteredList = pokemonList;
+
+    // Filter by selected types
+    if (selectedTypes.length > 0) {
+      filteredList = filteredList.filter((pokemon) =>
+        pokemon.types && selectedTypes.some((type) => pokemon.types.includes(type))
+      );
+    }
+
+    // Filter by search term
+    if (searchTerm.trim() !== '') {
+      filteredList = filteredList.filter((pokemon) =>
+        pokemon.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredPokemonList(filteredList);
+  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -83,11 +87,9 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
     });
   };
 
-  const isPokemonOfType = (pokemon: Pokemon) => {
-    if (selectedTypes.length === 0) {
-      return true;
-    }
-    return selectedTypes.some((type) => pokemon.types.includes(type));
+  const resetFilters = () => {
+    setSelectedTypes([]);
+    setSearchTerm('');
   };
 
   return (
@@ -103,8 +105,19 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-10 h-10 text-teal-600">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-10 h-10 text-teal-600"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
               <input
@@ -122,8 +135,19 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
           <div className="relative rounded-md shadow-sm mt-4">
             {/* Menu déroulant pour filtrer par type */}
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-10 h-10 text-teal-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-10 h-10 text-teal-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <div className="pl-16">
@@ -136,15 +160,21 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
                   onChange={() => handleTypeChange(type.name)}
                 />
               ))}
+              <button
+                onClick={resetFilters}
+                className="text-sm text-indigo-600 hover:underline focus:outline-none"
+              >
+                Réinitialiser
+              </button>
             </div>
           </div>
 
-          {filteredPokemonList && filteredPokemonList.length === 0 ? (
+          {filteredPokemonList.length === 0 ? (
             <p className="mt-4 text-red-500">Aucun Pokémon ne correspond à la recherche.</p>
           ) : (
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 mt-8">
               {/* Affichage des Pokémon filtrés */}
-              {filteredPokemonList?.map((pokemon) => isPokemonOfType(pokemon) && (
+              {filteredPokemonList.map((pokemon) => (
                 <Link legacyBehavior key={pokemon.pokedexId} href={`/pokemon/${pokemon.pokedexId}`}>
                   <a className="group">
                     <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-slate-200 xl:aspect-h-8 xl:aspect-w-7">
@@ -155,7 +185,8 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
                       />
                     </div>
                     <h3 className="mt-4 text-xl text-gray-700 font-bold">
-                      <span className="font-semibold text-teal-600">#{pokemon.pokedexId}</span> {pokemon.name}
+                      <span className="font-semibold text-teal-600">#{pokemon.pokedexId}</span>{' '}
+                      {pokemon.name}
                     </h3>
                   </a>
                 </Link>
@@ -177,6 +208,7 @@ export async function getStaticProps() {
       name: pokemon.name,
       image: pokemon.image,
       pokedexId: pokemon.pokedexId,
+      types: pokemon.apiTypes.map((type: any) => type.name.toLowerCase()),
     }));
 
     return {
