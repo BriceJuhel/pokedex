@@ -97,7 +97,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
   return (
     <Layout title="Pokédex">
-      <div className="bg-white">
+      <div className="bg-zinc-100">
         <div className="mx-auto max-w-2xl px-4 py-2 sm:px-6 sm:py-2 lg:max-w-7xl lg:px-8 bg-zinc-100">
           <h2 className="sr-only">Pokédex</h2>
 
@@ -145,7 +145,12 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
             </button>
             {isFilterMenuOpen && (
               <div className="bg-white rounded-md shadow-lg absolute z-10 mt-2 w-max">
-                <div className="py-1 grid grid-cols-4 gap-2" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                <div
+                  className={`py-1 px-1 grid grid-cols-3 text-sm sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2`}
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="options-menu"
+                >
                   {pokemonTypes.map((type) => (
                     <TypeFilterCheckbox
                       key={type.name}
@@ -165,11 +170,11 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
             )}
           </div>
 
-          <div className={isFilterMenuOpen ? 'mt-56' : 'mt-8'}>
+          <div className={isFilterMenuOpen ? 'mt-64' : 'mt-8'}>
             {filteredPokemonList.length === 0 ? (
               <p className="mt-4 text-red-500">Aucun Pokémon ne correspond à la recherche.</p>
             ) : (
-              <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8">
                 {/* Affichage des Pokémon filtrés */}
                 {filteredPokemonList.map((pokemon) => (
                   <Link legacyBehavior key={pokemon.pokedexId} href={`/pokemon/${pokemon.pokedexId}`}>
@@ -182,7 +187,8 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
                         />
                       </div>
                       <h3 className="mt-4 text-xl text-gray-700 font-bold">
-                        <span className="font-semibold text-teal-600">#{pokemon.pokedexId}</span> {pokemon.name}
+                        <span className="font-semibold text-teal-600">#{pokemon.pokedexId}</span>{' '}
+                        {pokemon.name}
                       </h3>
                     </a>
                   </Link>
