@@ -1,20 +1,32 @@
-import Layout from "../components/Layout";
 import React, { useEffect, useState } from 'react';
+import Layout from "../components/Layout";
 import Link from 'next/link';
 
+interface Pokemon {
+  name: string;
+  image: string;
+  pokedexId: number;
+}
 
+interface HomeProps {
+  pokemonList: Pokemon[];
+}
 
-export default function Home({ pokemonList }) {
+const Home: React.FC<HomeProps> = ({ pokemonList }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredPokemonList, setFilteredPokemonList] = useState(pokemonList);
+  const [filteredPokemonList, setFilteredPokemonList] = useState<Pokemon[]>(pokemonList);
 
-  const handleSearchChange = (event) => {
-    const searchTerm = event.target.value.toLowerCase();
-    setSearchTerm(searchTerm); // Mise à jour du terme de recherche
-    const filteredList = pokemonList.filter(
-      (pokemon) => pokemon.name.toLowerCase().startsWith(searchTerm)
-    );
-    setFilteredPokemonList(filteredList);
+  useEffect(() => {
+    if (pokemonList) {
+      const filteredList = pokemonList.filter(
+        (pokemon) => pokemon.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
+      setFilteredPokemonList(filteredList);
+    }
+  }, [searchTerm, pokemonList]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
   return (
@@ -27,32 +39,30 @@ export default function Home({ pokemonList }) {
             <label htmlFor="search" className="sr-only">
               Rechercher un Pokémon
             </label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-10 h-10 text-teal-600">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-16 pr-12 py-6 text-xl border-gray-300 rounded-md"
-                  placeholder="Rechercher un Pokémon"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                />
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-10 h-10 text-teal-600">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75l-2.489-2.489m0 0a3.375 3.375 0 10-4.773-4.773 3.375 3.375 0 004.774 4.774zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
               </div>
+              <input
+                type="text"
+                name="search"
+                id="search"
+                className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-16 pr-12 py-6 text-xl border-gray-300 rounded-md"
+                placeholder="Rechercher un Pokémon"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
             </div>
           </div>
 
-          {filteredPokemonList.length === 0 ? (
+          {filteredPokemonList && filteredPokemonList.length === 0 ? (
             <p className="mt-4 text-red-500">Aucun Pokémon ne correspond à la recherche.</p>
           ) : (
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 mt-8">
-              {filteredPokemonList.map((pokemon) => (
-                <Link  legacyBehavior key={pokemon.pokedexId} href={`/pokemon/${pokemon.pokedexId}`}>
+              {filteredPokemonList?.map((pokemon) => (
+                <Link legacyBehavior key={pokemon.pokedexId} href={`/pokemon/${pokemon.pokedexId}`}>
                   <a className="group">
                     <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-slate-200 xl:aspect-h-8 xl:aspect-w-7">
                       <img
@@ -75,7 +85,7 @@ export default function Home({ pokemonList }) {
       </div>
     </Layout>
   );
-}
+};
 
 export async function getStaticProps() {
   try {
@@ -104,5 +114,8 @@ export async function getStaticProps() {
     };
   }
 }
+
+export default Home;
+
 
 
