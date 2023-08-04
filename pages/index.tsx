@@ -90,13 +90,13 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 export async function getStaticProps() {
   try {
     const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/151');
-    const data = await res.json();
+    const data: Pokemon[] = await res.json(); // Spécifiez le type de data ici
 
-       // Extract the necessary information (name, image, pokedexID) from the API response
+    // Extract the necessary information (name, image, pokedexID) from the API response
     const pokemonList = data.map((pokemon) => ({
       name: pokemon.name,
-      image: pokemon.image, // Replace 'image' with the correct property name from the API response
-      pokedexId: pokemon.pokedexId, // Replace 'pokedexID' with the correct property name from the API response
+      image: pokemon.image,
+      pokedexId: pokemon.pokedexId,
     }));
 
     return {
@@ -116,6 +116,4 @@ export async function getStaticProps() {
 }
 
 export default Home;
-
-
 
