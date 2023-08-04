@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Layout from "../components/Layout";
 import Link from 'next/link';
 import TypeFilterCheckbox from '../components/TypeFilterCheckbox';
@@ -26,6 +26,8 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
   const [pokemonTypes, setPokemonTypes] = useState<PokemonType[]>([]);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
 
+  const filterMenuRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     // Fetch the types from the API
     const fetchTypes = async () => {
@@ -52,13 +54,27 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
     applyFilters();
   }, [selectedTypes, searchTerm]);
 
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (filterMenuRef.current && !filterMenuRef.current.contains(event.target as Node)) {
+        setIsFilterMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
   const applyFilters = () => {
     let filteredList = pokemonList;
 
     // Filter by selected types
     if (selectedTypes.length > 0) {
       filteredList = filteredList.filter((pokemon) =>
-        pokemon.types && selectedTypes.some((type) => pokemon.types.includes(type))
+        selectedTypes.every((type) => pokemon.types.includes(type))
       );
     }
 
@@ -135,7 +151,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
             </div>
           </div>
 
-          <div className="relative mt-4">
+          <div className="relative mt-4" ref={filterMenuRef}>
             {/* Menu déroulant pour filtrer par type */}
             <button
               onClick={toggleFilterMenu}
@@ -170,7 +186,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
             )}
           </div>
 
-          <div className={isFilterMenuOpen ? 'mt-64' : 'mt-8'}>
+          <div className={isFilterMenuOpen ? 'mt-56' : 'mt-8'}>
             {filteredPokemonList.length === 0 ? (
               <p className="mt-4 text-red-500">Aucun Pokémon ne correspond à la recherche.</p>
             ) : (
@@ -204,7 +220,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
 export async function getStaticProps() {
   try {
-    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/151');
+    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/898');
     const data: Pokemon[] = await res.json();
 
     const pokemonList = data.map((pokemon) => ({
