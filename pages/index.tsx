@@ -118,7 +118,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
         <div className="mx-auto max-w-2xl px-4 py-2 sm:px-6 sm:py-2 lg:max-w-7xl lg:px-8 bg-zinc-100">
           <h2 className="sr-only">Pokédex</h2>
           <Link legacyBehavior href="/jeu">
-  <a className="text-blue-500">Jouer au jeu de devinettes Pokémon</a>
+  <a className="text-blue-500">Jouer à Quel est ce Pokémon ?</a>
 </Link>
 
           <div className="relative rounded-md shadow-sm">
