@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Layout from "../components/Layout";
+import Layout from '../components/Layout';
 import Link from 'next/link';
 import TypeFilterCheckbox from '../components/TypeFilterCheckbox';
 
@@ -22,12 +22,14 @@ interface PokemonType {
 
 const Home: React.FC<HomeProps> = ({ pokemonList }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredPokemonList, setFilteredPokemonList] = useState<Pokemon[]>(pokemonList);
+  const [filteredPokemonList, setFilteredPokemonList] = useState<Pokemon[]>(pokemonList.slice(0, 20)); // Charger les 30 premiers Pokémon
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [pokemonTypes, setPokemonTypes] = useState<PokemonType[]>([]);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1); // Suivre la page actuelle
 
   const filterMenuRef = useRef<HTMLDivElement>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Fetch the types from the API
@@ -51,23 +53,39 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
   }, []);
 
   useEffect(() => {
-    // Apply filters whenever the selected types or search term change
-    applyFilters();
-  }, [selectedTypes, searchTerm]);
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (filterMenuRef.current && !filterMenuRef.current.contains(event.target as Node)) {
-        setIsFilterMenuOpen(false);
+    // Observer pour le chargement de plus de Pokémon lors du défilement
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        // Lorsque l'utilisateur atteint le bas de la liste actuelle, chargez plus de Pokémon
+        loadMore();
       }
-    };
+    });
 
-    document.addEventListener('click', handleOutsideClick);
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
 
     return () => {
-      document.removeEventListener('click', handleOutsideClick);
+      // Nettoyez l'observateur lorsqu'il n'est plus nécessaire
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
     };
-  }, []);
+  }, [selectedTypes, searchTerm, currentPage]);
+
+  const loadMore = () => {
+    // Calculez la prochaine page à charger
+    const nextPage = currentPage + 1;
+    setCurrentPage(nextPage);
+
+    // Chargez les 30 prochains Pokémon (ou une autre quantité si vous le souhaitez)
+    const startIndex = (nextPage - 1) * 30;
+    const endIndex = startIndex + 30;
+    const nextPokemonPage = pokemonList.slice(startIndex, endIndex);
+
+    // Ajoutez les nouveaux Pokémon à la liste existante
+    setFilteredPokemonList((prevList) => [...prevList, ...nextPokemonPage]);
+  };
 
   const applyFilters = () => {
     let filteredList = pokemonList;
@@ -117,13 +135,15 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
       <div className="bg-zinc-100">
         <div className="mx-auto max-w-2xl px-4 py-2 sm:px-6 sm:py-2 lg:max-w-7xl lg:px-8 bg-zinc-100">
           <h2 className="sr-only">Pokédex</h2>
+
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mb-16">
             <Link legacyBehavior href="/jeu">
-            <span>
-              <i className="fas fa-trophy mr-2"></i>Qui est ce Pokémon ?
-            </span>
+              <span>
+                <i className="fas fa-trophy mr-2"></i>Qui est ce Pokémon ?
+              </span>
             </Link>
           </button>
+
           <div className="relative rounded-md shadow-sm">
             {/* La barre de recherche */}
             <label htmlFor="search" className="sr-only">
@@ -210,14 +230,17 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
                         />
                       </div>
                       <h3 className="mt-4 text-xl text-gray-700 font-bold">
-                        <span className="font-semibold text-teal-600">#{pokemon.pokedexId}</span>{' '}
-                        {pokemon.name}
+                        <span className="font-semibold text-teal-600">#{pokemon.pokedexId}</span> {pokemon.name}
                       </h3>
                     </a>
                   </Link>
                 ))}
               </div>
             )}
+          </div>
+
+          <div className="relative mt-4" ref={loadMoreRef}>
+            {/* Load More */}
           </div>
         </div>
       </div>
