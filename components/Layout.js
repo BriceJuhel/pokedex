@@ -10,6 +10,12 @@ export default function Layout({title, children}) {
         <Head>
           <title>{title}</title>
           <link rel="icon" href="/images/pokeball.png" />
+          <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="..."
+          crossorigin="anonymous"
+        />
         </Head>
 
         <div className="bg-zinc-100 px-4 py-2 fixed top-0 left-0 w-full z-50">

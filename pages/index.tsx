@@ -117,10 +117,13 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
       <div className="bg-zinc-100">
         <div className="mx-auto max-w-2xl px-4 py-2 sm:px-6 sm:py-2 lg:max-w-7xl lg:px-8 bg-zinc-100">
           <h2 className="sr-only">Pokédex</h2>
-          <Link legacyBehavior href="/jeu">
-  <a className="text-blue-500">Jouer à Quel est ce Pokémon ?</a>
-</Link>
-
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mb-16">
+            <Link legacyBehavior href="/jeu">
+            <span>
+              <i className="fas fa-trophy mr-2"></i>Quel est ce Pokémon ?
+            </span>
+            </Link>
+          </button>
           <div className="relative rounded-md shadow-sm">
             {/* La barre de recherche */}
             <label htmlFor="search" className="sr-only">
@@ -224,7 +227,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
 export async function getStaticProps() {
   try {
-    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/898');
+    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/494');
     const data: Pokemon[] = await res.json();
 
     const pokemonList = data.map((pokemon) => ({
