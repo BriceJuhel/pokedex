@@ -143,7 +143,7 @@ export default function Jeu() {
 )}
           </div>
         ) : (
-          <div>
+          <div className='px-4'>
               <img src="/images/pkm.jpg" alt="Image Pokémon" className="object-cover h-48 w-96 mb-4 rounded" />
               <h1 className="text-2xl font-semibold mb-4">Qui est ce Pokémon ?</h1>
               <p>Le but du jeu est de deviner le nom du Pokémon à partir de son image. Vous en avez 20 à deviner !</p>

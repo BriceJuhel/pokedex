@@ -6,7 +6,7 @@ import Footer from "@/components/Footer"
 export default function Layout({title, children}) {
 
   return (
-    <div className='bg-zinc-100'>
+    <div className='bg-zinc-100 flex-col flex justify-between min-h-screen'>
         <Head>
           <title>{title}</title>
           <link rel="icon" href="/images/pokeball.png" />
@@ -29,7 +29,7 @@ export default function Layout({title, children}) {
         </div>
       </div>
 
-        <main className='container mx-auto max-w-6xl pt-24 min-h-screen '>
+        <main className='container mx-auto max-w-6xl pt-24'>
             {children}
         </main>
 
