@@ -117,7 +117,13 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
       <div className="bg-zinc-100">
         <div className="mx-auto max-w-2xl px-4 py-2 sm:px-6 sm:py-2 lg:max-w-7xl lg:px-8 bg-zinc-100">
           <h2 className="sr-only">Pokédex</h2>
-
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mb-16">
+            <Link legacyBehavior href="/jeu">
+            <span>
+              <i className="fas fa-trophy mr-2"></i>Qui est ce Pokémon ?
+            </span>
+            </Link>
+          </button>
           <div className="relative rounded-md shadow-sm">
             {/* La barre de recherche */}
             <label htmlFor="search" className="sr-only">
