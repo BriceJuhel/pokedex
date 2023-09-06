@@ -120,7 +120,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mb-16">
             <Link legacyBehavior href="/jeu">
             <span>
-              <i className="fas fa-trophy mr-2"></i>Quel est ce Pokémon ?
+              <i className="fas fa-trophy mr-2"></i>Qui est ce Pokémon ?
             </span>
             </Link>
           </button>
@@ -227,7 +227,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
 export async function getStaticProps() {
   try {
-    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/494');
+    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/898');
     const data: Pokemon[] = await res.json();
 
     const pokemonList = data.map((pokemon) => ({

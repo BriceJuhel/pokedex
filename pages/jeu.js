@@ -14,7 +14,7 @@ export default function Jeu() {
   const API_URL = 'https://pokebuildapi.fr/api/v1/pokemon';
 
   const startNewStep = () => {
-    const getRandomPokemonId = () => Math.floor(Math.random() * 496) + 1;
+    const getRandomPokemonId = () => Math.floor(Math.random() * 898) + 1;
 
     let randomPokemonId = getRandomPokemonId();
     while (usedPokemonIds.includes(randomPokemonId)) {
@@ -90,11 +90,11 @@ export default function Jeu() {
   };
 
   return (
-    <Layout title="Quel est ce Pokémon ?">
+    <Layout title="Qui est ce Pokémon ?">
       <div className="flex flex-col m-h-screen items-center">
         {isGameStarted ? (
           <div>
-            <h1 className="text-2xl font-semibold mb-4">Quel est ce Pokémon ?</h1>
+            <h1 className="text-2xl font-semibold mb-4">Qui est ce Pokémon ?</h1>
             {selectedPokemon && step <= totalSteps && (
               <div>
                 <img
@@ -145,8 +145,8 @@ export default function Jeu() {
         ) : (
           <div>
               <img src="/images/pkm.jpg" alt="Image Pokémon" className="object-cover h-48 w-96 mb-4 rounded" />
-              <h1 className="text-2xl font-semibold mb-4">Quel est ce Pokémon ?</h1>
-              <p>Le but du jeu est de deviner le nom du Pokémon à partir de son image. Vous avez 20 pokémons à deviner.</p>
+              <h1 className="text-2xl font-semibold mb-4">Qui est ce Pokémon ?</h1>
+              <p>Le but du jeu est de deviner le nom du Pokémon à partir de son image. Vous en avez 20 à deviner !</p>
               <button onClick={startGame} className="bg-blue-500 text-white px-4 py-2 rounded mt-4">
                 Commencer
               </button>
