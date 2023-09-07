@@ -31,6 +31,9 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
+  
+
+
   useEffect(() => {
     // Fetch the types from the API
     const fetchTypes = async () => {
@@ -52,8 +55,12 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
     fetchTypes();
   }, []);
 
+ 
+
+
   useEffect(() => {
     // Observer pour le chargement de plus de Pokémon lors du défilement
+    applyFilters();
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         // Lorsque l'utilisateur atteint le bas de la liste actuelle, chargez plus de Pokémon
@@ -86,6 +93,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
     // Ajoutez les nouveaux Pokémon à la liste existante
     setFilteredPokemonList((prevList) => [...prevList, ...nextPokemonPage]);
   };
+  
 
   const applyFilters = () => {
     let filteredList = pokemonList;
@@ -104,8 +112,9 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
       );
     }
 
-    setFilteredPokemonList(filteredList);
+     setFilteredPokemonList(filteredList);
   };
+
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -250,7 +259,7 @@ const Home: React.FC<HomeProps> = ({ pokemonList }) => {
 
 export async function getStaticProps() {
   try {
-    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/898');
+    const res = await fetch('https://pokebuildapi.fr/api/v1/pokemon/limit/151');
     const data: Pokemon[] = await res.json();
 
     const pokemonList = data.map((pokemon) => ({

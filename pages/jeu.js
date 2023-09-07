@@ -14,7 +14,7 @@ export default function Jeu() {
   const API_URL = 'https://pokebuildapi.fr/api/v1/pokemon';
 
   const startNewStep = () => {
-    const getRandomPokemonId = () => Math.floor(Math.random() * 898) + 1;
+    const getRandomPokemonId = () => Math.floor(Math.random() * 151) + 1;
 
     let randomPokemonId = getRandomPokemonId();
     while (usedPokemonIds.includes(randomPokemonId)) {
